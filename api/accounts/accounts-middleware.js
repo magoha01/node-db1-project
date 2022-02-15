@@ -1,11 +1,11 @@
 const Accounts = require("./accounts-model");
-
+const db = require("../../data/db-config");
 exports.checkAccountPayload = (req, res, next) => {
   try {
     const { name, budget } = req.body;
     if (!name || !budget) {
       next({ status: 400, message: "name and budget are required" });
-    } else if(typeof name !== 'string'){
+    } else if (typeof name !== "string") {
       next({ status: 400, message: "value must be a string" });
     } else if (name.trim().length < 3 || name.trim().length > 100) {
       next({
@@ -15,30 +15,37 @@ exports.checkAccountPayload = (req, res, next) => {
     } else if (typeof budget !== "number" || isNaN(budget)) {
       next({
         status: 400,
-        message: "budget of account must be a number",
+        message: "must be a number",
       });
-    } else if (budget < 0 || budget > 1000000 ) {
+    } else if (budget < 0 || budget > 1000000) {
       next({
         status: 400,
         message: "budget of account is too large or too small",
       });
     } else {
-      console.log("success!");
+      req.name = name.trim();
+      req.budget = budget;
+      next();
     }
   } catch (err) {
-    next();
+    next(err);
   }
-  next();
 };
 
-exports.checkAccountNameUnique = (req, res, next) => {
-  // try{
+exports.checkAccountNameUnique = async (req, res, next) => {
+  try {
+    const existing = await db("accounts")
+      .where("name", req.body.name.trim())
+      .first();
 
-  // } catch(err) {
-  //   next();
-  // }
-  console.log("checkAccountNameUnique MW");
-  next();
+    if (existing) {
+      return res.status(400).json({ message: "that name is taken" });
+    } else {
+      next();
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.checkAccountId = async (req, res, next) => {

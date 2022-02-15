@@ -28,7 +28,7 @@ router.post(
   async (req, res, next) => {
     try {
       const newAccount = await Accounts.create(req.body);
-      res.json(newAccount);
+      res.status(201).json(newAccount);
     } catch (err) {
       next(err);
     }
@@ -40,18 +40,20 @@ router.put(
   checkAccountId,
   checkAccountPayload,
   checkAccountNameUnique,
-  (req, res, next) => {
+  async (req, res, next) => {
     try {
-      res.json("edit account");
+      const updatedAccount = await Accounts.updateById(req.params.id, req.body);
+      res.status(200).json(updatedAccount);
     } catch (err) {
       next(err);
     }
   }
 );
 
-router.delete("/:id", checkAccountId, (req, res, next) => {
+router.delete("/:id", checkAccountId, async (req, res, next) => {
   try {
-    res.json("delete account");
+    const deletedAccount = await Accounts.deleteById(req.params.id)
+    res.json(deletedAccount);
   } catch (err) {
     next(err);
   }

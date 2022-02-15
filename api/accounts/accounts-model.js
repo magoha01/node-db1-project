@@ -9,11 +9,13 @@ const getById = (id) => {
 };
 
 const create = (account) => {
-  return db("accounts").insert({ name: account.name, budget: account.budget });
+  return db("accounts").insert({ name: account.name.trim(), budget: account.budget });
 };
 
 const updateById = (id, account) => {
-  return db("accounts").where("id", id).update({ account });
+  return db("accounts")
+    .where("id", id)
+    .update({ name: account.name, budget: account.budget });
 };
 
 const deleteById = (id) => {
