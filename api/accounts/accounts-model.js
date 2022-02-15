@@ -5,19 +5,19 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  return db("accounts").where('id', id).first();
+  return db("accounts").where("id", id).first();
 };
 
 const create = (account) => {
-  return db("accounts").insert({ account });
+  return db("accounts").insert({ name: account.name, budget: account.budget });
 };
 
 const updateById = (id, account) => {
-  return db("accounts").where('id', id).update({ account });
+  return db("accounts").where("id", id).update({ account });
 };
 
 const deleteById = (id) => {
-  return db("accounts").where('id', id).del();
+  return db("accounts").where("id", id).del();
 };
 
 module.exports = {
