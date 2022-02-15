@@ -1,32 +1,28 @@
 const Accounts = require("./accounts-model");
 const db = require("../../data/db-config");
+
 exports.checkAccountPayload = (req, res, next) => {
   try {
+    const error = { status: 400 };
     const { name, budget } = req.body;
     if (!name || !budget) {
-      next({ status: 400, message: "name and budget are required" });
+      error.message = "name and budget are required";
     } else if (typeof name !== "string") {
-      next({ status: 400, message: "value must be a string" });
+      error.message = "value must be a string";
     } else if (name.trim().length < 3 || name.trim().length > 100) {
-      next({
-        status: 400,
-        message: "name of account must be between 3 and 100",
-      });
+      error.message = "name of account must be between 3 and 100";
     } else if (typeof budget !== "number" || isNaN(budget)) {
-      next({
-        status: 400,
-        message: "must be a number",
-      });
+      error.message = "must be a number";
     } else if (budget < 0 || budget > 1000000) {
-      next({
-        status: 400,
-        message: "budget of account is too large or too small",
-      });
+      error.message = "budget of account is too large or too small";
+    }
+
+    if (error.message) {
+      next(error);
     } else {
-      req.name = name.trim();
-      req.budget = budget;
       next();
     }
+
   } catch (err) {
     next(err);
   }

@@ -25,13 +25,15 @@ router.post(
   "/",
   checkAccountPayload,
   checkAccountNameUnique,
-  async (req, res, next) => {
-    try {
-      const newAccount = await Accounts.create(req.body);
-      res.status(201).json(newAccount);
-    } catch (err) {
-      next(err);
-    }
+  (req, res, next) => {
+    Accounts.create(req.body)
+      .then((newAccount) => {
+        res.status(201).json(newAccount);
+      })
+      .then(() => {
+        Accounts.getById(req.params.id);
+      })
+      .catch(next);
   }
 );
 
@@ -39,10 +41,10 @@ router.put(
   "/:id",
   checkAccountId,
   checkAccountPayload,
-  checkAccountNameUnique,
+  //checkAccountNameUnique,
   async (req, res, next) => {
     try {
-      const updatedAccount = await Accounts.updateById(req.params.id, req.body);
+      const updatedAccount = await Accounts.updateById(req.params.id, req.body)
       res.status(200).json(updatedAccount);
     } catch (err) {
       next(err);
@@ -52,7 +54,7 @@ router.put(
 
 router.delete("/:id", checkAccountId, async (req, res, next) => {
   try {
-    const deletedAccount = await Accounts.deleteById(req.params.id)
+    const deletedAccount = await Accounts.deleteById(req.params.id);
     res.json(deletedAccount);
   } catch (err) {
     next(err);
