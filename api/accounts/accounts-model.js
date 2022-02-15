@@ -5,7 +5,7 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  return db("accounts").where({ id });
+  return db("accounts").where('id', id).first();
 };
 
 const create = (account) => {
@@ -13,11 +13,11 @@ const create = (account) => {
 };
 
 const updateById = (id, account) => {
-  return db("accounts").where({ id }).update({ account });
+  return db("accounts").where('id', id).update({ account });
 };
 
 const deleteById = (id) => {
-  return db("accounts").where({ id }).del();
+  return db("accounts").where('id', id).del();
 };
 
 module.exports = {
