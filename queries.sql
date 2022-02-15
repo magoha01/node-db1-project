@@ -7,11 +7,11 @@ SELECT * from customers where postalcode = 1010;
 SELECT phone FROM [Suppliers] where SupplierID = 11;
 
 -- List first 10 orders placed, sorted descending by the order date
-select * from orders order by orderdate desc limit 10;
+SELECT * FROM orders order by orderdate desc limit 10;
 
 -- Find all customers that live in London, Madrid, or Brazil
 SELECT * FROM customers 
-where (city = 'London' or city='Madrid')
+where city in ('London', 'Madrid')
 or country = 'Brazil';
 
 -- Add a customer record for "The Shire", the contact name is "Bilbo Baggins" the address is -"1 Hobbit-Hole" in "Bag End", postal code "111" and the country is "Middle Earth"
